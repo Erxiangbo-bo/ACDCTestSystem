@@ -1,0 +1,13 @@
+{
+  "ProductData": {
+    "WorkNum": null,
+    "CurrentModel": null,
+    "Voltage_Num": 0,
+    "VoltPassNum": 0,
+    "Function_Num": 0,
+    "FuncPassNum": 0,
+    "BlackList": [
+      "1234567890"
+    ]
+  }
+}
