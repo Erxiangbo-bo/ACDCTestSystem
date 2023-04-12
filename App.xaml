@@ -1,0 +1,310 @@
+﻿<prism:PrismApplication
+    x:Class="ACDCTestSystemPart1.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:ACDCTestSystemPart1"
+    xmlns:converter="clr-namespace:ACDCTestSystemPart1.Converter"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:prism="http://prismlibrary.com/">
+    <Application.Resources >
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme
+                    BaseTheme="Light"
+                    PrimaryColor="DeepPurple"
+                    SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converter:ValueStatusConverter x:Key="v2s"/>
+            <converter:ConfigConverter x:Key="c2v"/>
+            <converter:TestConfigConverter x:Key="t2v"/>
+
+            <ControlTemplate x:Key="ColorInfo" TargetType="TextBox">
+                <Border BorderThickness="1" BorderBrush="Black" CornerRadius="8" Margin="20" Background="{TemplateBinding Background}">
+                    <Label Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14" Foreground="White">
+                        <Label.Content>
+                            <Binding Path="Text" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=TextBox}" UpdateSourceTrigger="PropertyChanged">
+                            </Binding>
+                        </Label.Content>
+                    </Label>
+                </Border>
+            </ControlTemplate>
+
+
+            <Style x:Key="TestResultStatus_old" TargetType="Label">
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Width" Value="50"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Label">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="50">
+                                <Grid>
+                                    <ContentPresenter x:Name="Skin" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
+                                    <TextBlock Text="{Binding Tag,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="Black"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Content,ElementName=Skin,UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="Background" Value="Red"/>
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Content,ElementName=Skin,UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                    <Setter Property="Background" Value="LightGreen"/>
+                                    <Setter Property="Foreground" Value="LightGreen"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Content,ElementName=Skin,UpdateSourceTrigger=PropertyChanged}" Value="2">
+                                    <Setter Property="Background" Value="LightSlateGray"/>
+                                    <Setter Property="Foreground" Value="LightSlateGray"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="TextBox" x:Key="TestResultStatus">
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Width" Value="50"/>
+                <Setter Property="IsReadOnly" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="50" Background="Green" Name="EllipseRect">
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="Text" Value='2'>
+                                    <Setter Property="Background" TargetName="EllipseRect">
+                                        <Setter.Value>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#FFE2E2E2" Offset="0"/>
+                                                <GradientStop Color="White" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="Text" Value='1'>
+                                    <Setter Property="Background" TargetName="EllipseRect">
+                                        <Setter.Value>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#FF009A00" Offset="0"/>
+                                                <GradientStop Color="#FF94FF2D" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="Text" Value='0'>
+                                    <Setter Property="Background" TargetName="EllipseRect">
+                                        <Setter.Value>
+                                            <LinearGradientBrush EndPoint="0.8,1" StartPoint="0.2,0">
+                                                <GradientStop Color="#FFC00404" Offset="0"/>
+                                                <GradientStop Color="#FFFF6357" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+
+            <Style x:Key="TextStyle" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Margin" Value="10,5,10,5"/>
+            </Style>
+
+      
+
+
+            <ControlTemplate x:Key="LabelTextAllowString" TargetType="TextBox">
+                <Border BorderThickness="1" BorderBrush="White" CornerRadius="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border BorderThickness="0,0,1,0" BorderBrush="White" CornerRadius="8" Background="Black">
+                            <TextBlock Text="{Binding Path=Tag,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBox}}"
+                                       Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"
+                                       FontSize="12"/>
+                        </Border>
+                        <TextBox Grid.Column="1" Foreground="{Binding Path=Foreground,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBox}}"
+                                 Margin="5,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12">
+                            <TextBox.Text>
+                                <Binding Path="Text" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=TextBox}" UpdateSourceTrigger="PropertyChanged">
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+
+
+            <ControlTemplate x:Key="TestData" TargetType="TextBox">
+                <Border BorderThickness="1" BorderBrush="White" CornerRadius="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border BorderThickness="0,0,1,0" BorderBrush="White" CornerRadius="8" Background="Black">
+                            <TextBlock Text="{Binding Path=Tag,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBox}}"
+                                       Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"
+                                       FontSize="10"/>
+                        </Border>
+                        <TextBox Grid.Column="1" Foreground="{Binding Path=Foreground,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBox}}"
+                                 Margin="5,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14">
+                            <TextBox.Text>
+                                <Binding Path="Text" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=TextBox}" UpdateSourceTrigger="PropertyChanged">
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+            
+            
+            <ControlTemplate x:Key="SpecialTextBox" TargetType="TextBox">
+                <Border BorderThickness="1" BorderBrush="White" CornerRadius="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border BorderThickness="0,0,1,0" BorderBrush="White" CornerRadius="8" Background="Black">
+                            <TextBlock Text="{Binding Path=Name,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBox}}"
+                                       Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"
+                                       FontSize="12"/>
+                        </Border>
+                        <TextBox Grid.Column="1" Foreground="{Binding Path=Foreground,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBox}}"
+                                 Margin="5,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Name="ShowText">
+                            <TextBox.Text>
+                                <Binding Path="Text" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=TextBox}" UpdateSourceTrigger="PropertyChanged">
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </Grid>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="Tag" Value="Warning">
+                        <Setter Property="Foreground" Value="Red" TargetName="ShowText"/>
+                        <Setter Property="FontSize" Value="16" TargetName="ShowText"/>
+                        <Setter Property="FontWeight" Value="Heavy" TargetName="ShowText"/>
+                    </Trigger>
+                    <Trigger Property="Tag" Value="Normal">
+                        <Setter Property="Foreground" Value="Black" TargetName="ShowText"/>
+                        <Setter Property="FontSize" Value="12" TargetName="ShowText"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+
+            <ControlTemplate x:Key="ComboboxTextAllowString" TargetType="ComboBox">
+                <Border BorderThickness="1" BorderBrush="White" CornerRadius="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border BorderThickness="0,0,1,0" BorderBrush="White" CornerRadius="8" Background="Black">
+                            <TextBlock Text="{Binding Path=Tag,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ComboBox}}"
+                                       Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"
+                                       FontSize="14"/>
+                        </Border>
+                        <ComboBox Grid.Column="1" Text="{Binding Path=Text,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ComboBox}, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="5,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14"
+                                  ItemsSource="{Binding Path=ItemsSource,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ComboBox}}">
+                        </ComboBox>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+
+
+            <DataTemplate x:Key="BurnINInfo" >
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="50" x:Name="Skin">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
+                </Border>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsOccupy}" Value="True">
+                        <Setter  TargetName="Skin"  Property="Background" Value="LightGreen"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsOccupy}" Value="False">
+                        <Setter Property="Background" Value="LightSlateGray" TargetName="Skin"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+
+
+            <Style x:Key="PressButton" TargetType="Button">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="Width" Value="60"/>
+                <Setter Property="Height" Value="60"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border
+                                BorderThickness="1"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="Black"
+                                CornerRadius="50">
+                                <ContentPresenter
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding Content}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="Green" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="Gray" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <Style x:Key="Valid" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="1">
+                        <Setter Property="Background" Value="Black" />
+                        <Setter Property="Foreground" Value="White"/>
+                    </Trigger>
+                    <Trigger Property="Tag" Value="0">
+                        <Setter Property="Background" Value="Gainsboro" />
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="GridVisibility" TargetType="Grid">
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="1">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </Trigger>
+                    <Trigger Property="Tag" Value="0">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</prism:PrismApplication>
